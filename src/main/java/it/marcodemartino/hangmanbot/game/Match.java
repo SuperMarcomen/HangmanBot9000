@@ -6,6 +6,7 @@ import java.util.List;
 public class Match {
 
     private static final int LIVES_AMOUNT = 5;
+    public static final char WORD_FILLER = '-';
     private final String word;
     private final String category;
     private final List<Character> guessedLetters;
@@ -35,6 +36,18 @@ public class Match {
     public boolean isMatchEnded() {
         if (lives == 0) return true;
         return isWordGuessed();
+    }
+
+    public String getCurrentStatusWord() {
+        StringBuilder currentWord = new StringBuilder();
+        for (char c : word.toCharArray()) {
+            if (guessedLetters.contains(c)) {
+                currentWord.append(c);
+            } else {
+                currentWord.append(WORD_FILLER);
+            }
+        }
+        return currentWord.toString();
     }
 
     private boolean isWordGuessed() {

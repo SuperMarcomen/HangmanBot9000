@@ -2,6 +2,7 @@ package it.marcodemartino.hangmanbot.game;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -38,5 +39,13 @@ class MatchTest {
         match.guessLetter('y');
         match.guessLetter('e');
         assertTrue(match.isMatchEnded());
+    }
+
+    @Test
+    void getCurrentStatusWord() {
+        Match match = new Match("cellphone", "technology");
+        match.guessLetter('l');
+        match.guessLetter('o');
+        assertEquals("--ll--o--", match.getCurrentStatusWord());
     }
 }
