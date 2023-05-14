@@ -4,12 +4,12 @@ import io.github.ageofwar.telejam.inline.CallbackDataInlineKeyboardButton;
 
 import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getString;
 
-public class NewMatchButton extends CallbackDataInlineKeyboardButton {
+public class BackButton extends CallbackDataInlineKeyboardButton {
 
-    public NewMatchButton(long userId) {
+    public BackButton(long userId) {
         super(
-                getString("button_new_match", userId),
-                "new_match"
+                getString("button_back_start", userId),
+                "back_start"
         );
     }
 }

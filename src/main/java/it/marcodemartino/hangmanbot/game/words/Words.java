@@ -3,6 +3,8 @@ package it.marcodemartino.hangmanbot.game.words;
 import it.marcodemartino.hangmanbot.game.collections.RandomArrayList;
 import it.marcodemartino.hangmanbot.game.collections.RandomHashMap;
 
+import java.util.Set;
+
 public class Words {
 
     private final RandomHashMap<String, RandomArrayList<String>> words;
@@ -13,6 +15,10 @@ public class Words {
 
     public void addWords(String category, RandomArrayList<String> words) {
         this.words.put(category, words);
+    }
+
+    public Set<String> getCategories() {
+        return words.keySet();
     }
 
     public String getRandomCategory() {

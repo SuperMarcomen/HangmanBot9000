@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -66,6 +67,10 @@ public class WordsProviderTxt extends WordsProvider {
             e.printStackTrace();
         }
         return Collections.emptyList();
+    }
+
+    public Set<String> getCategoriesFromLocale(Locale locale) {
+        return wordsMap.get(locale).getCategories();
     }
 
     // here only for testing purposes
