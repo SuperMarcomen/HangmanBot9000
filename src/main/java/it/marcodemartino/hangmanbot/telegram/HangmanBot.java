@@ -15,8 +15,9 @@ public class HangmanBot extends LongPollingBot {
 
         String token = args[0];
         Bot bot = Bot.fromToken(token);
-        HangmanBot hangmanBot = new HangmanBot(bot);
-        hangmanBot.run();
+        try (HangmanBot hangmanBot = new HangmanBot(bot)) {
+            hangmanBot.run();
+        }
     }
 
     public HangmanBot(Bot bot) {
