@@ -1,5 +1,6 @@
 package it.marcodemartino.hangmanbot.game.words;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -11,6 +12,7 @@ public abstract class WordsProvider {
     public abstract void loadAllWords();
 
     public abstract Set<String> getCategoriesFromLocale(Locale locale);
+    public abstract List<Character> getAlphabetFromLocale(Locale locale);
     public Words getWordsFromLocale(Locale locale) {
         return wordsMap.get(locale);
     }

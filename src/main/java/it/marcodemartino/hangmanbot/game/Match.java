@@ -29,7 +29,7 @@ public class Match {
         return word.contains(String.valueOf(lowerCaseLetter));
     }
 
-    public void decreaseLife() {
+    public void decreaseLives() {
         lives--;
     }
 
@@ -57,5 +57,13 @@ public class Match {
             }
         }
         return true;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public int getLives() {
+        return lives;
     }
 }

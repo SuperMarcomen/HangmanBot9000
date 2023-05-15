@@ -2,8 +2,10 @@ package it.marcodemartino.hangmanbot.telegram;
 
 import io.github.ageofwar.telejam.Bot;
 import io.github.ageofwar.telejam.LongPollingBot;
+import it.marcodemartino.hangmanbot.game.Matches;
 import it.marcodemartino.hangmanbot.game.words.WordsProvider;
 import it.marcodemartino.hangmanbot.game.words.WordsProviderTxt;
+import it.marcodemartino.hangmanbot.telegram.callback.CategoryChosenCallback;
 import it.marcodemartino.hangmanbot.telegram.callback.NewMatchCallback;
 import it.marcodemartino.hangmanbot.telegram.inline.InlineResults;
 
@@ -26,9 +28,11 @@ public class HangmanBot extends LongPollingBot {
     public HangmanBot(Bot bot) {
         super(bot);
         WordsProvider wordsProvider = new WordsProviderTxt();
+        Matches matches = new Matches();
         events.registerUpdateHandlers(
                 new InlineResults(bot),
-                new NewMatchCallback(bot, wordsProvider)
+                new NewMatchCallback(bot, wordsProvider),
+                new CategoryChosenCallback(bot, wordsProvider, matches)
         );
     }
 }

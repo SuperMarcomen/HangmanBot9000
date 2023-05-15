@@ -10,13 +10,21 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class WordsProviderTxtTest {
 
-    @Test
-    void loadAllWords() {
-        WordsProviderTxt wordsProvider = new WordsProviderTxt();
-        wordsProvider.loadAllWords();
+    private final WordsProviderTxt wordsProvider = new WordsProviderTxt();
+    private final Map<Locale, Words> map = wordsProvider.getWordsMap();
 
-        Map<Locale, Words> map = wordsProvider.getWordsMap();
+    @Test
+    void checkIfWordsEmpty() {
         assertFalse(map.isEmpty());
+    }
+
+    @Test
+    void checkIfCategoriesNotNull() {
         assertNotNull(map.get(Locale.ENGLISH));
+    }
+
+    @Test
+    void checkIfAlphabetEmpty() {
+        assertFalse(map.get(Locale.ENGLISH).getAlphabet().isEmpty());
     }
 }

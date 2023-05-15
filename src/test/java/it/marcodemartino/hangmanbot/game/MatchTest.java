@@ -24,10 +24,10 @@ class MatchTest {
     }
 
     @Test
-    void isMatchEndedLifes() {
+    void isMatchEndedLives() {
         Match match = new Match("bye", "vocabulary");
         for (int i = 0; i < 5; i++) {
-            match.decreaseLife();
+            match.decreaseLives();
         }
         assertTrue(match.isMatchEnded());
     }
