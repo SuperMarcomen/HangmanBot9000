@@ -8,23 +8,22 @@ import io.github.ageofwar.telejam.replymarkups.InlineKeyboardMarkup;
 import io.github.ageofwar.telejam.text.Text;
 import it.marcodemartino.hangmanbot.game.Match;
 import it.marcodemartino.hangmanbot.game.Matches;
-import it.marcodemartino.hangmanbot.game.words.Words;
 import it.marcodemartino.hangmanbot.game.words.WordsProvider;
+import it.marcodemartino.hangmanbot.telegram.buttons.BackButton;
 import it.marcodemartino.hangmanbot.telegram.keyboard.AlphabetKeyboard;
 
-import java.util.Collections;
 import java.util.Locale;
 
 import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getLocale;
 import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getParametirizedString;
 
-public class CategoryChosenCallback implements CallbackDataHandler {
+public class LetterClickCallback implements CallbackDataHandler {
 
     private final Bot bot;
     private final WordsProvider wordsProvider;
     private final Matches matches;
 
-    public CategoryChosenCallback(Bot bot, WordsProvider wordsProvider, Matches matches) {
+    public LetterClickCallback(Bot bot, WordsProvider wordsProvider, Matches matches) {
         this.bot = bot;
         this.wordsProvider = wordsProvider;
         this.matches = matches;
@@ -35,23 +34,42 @@ public class CategoryChosenCallback implements CallbackDataHandler {
         if (callbackQuery.getData().isEmpty()) return;
         if (callbackQuery.getInlineMessageId().isEmpty()) return;
         String data = callbackQuery.getData().get();
-        if (!data.startsWith("category")) return;
-
-        String category = data.split("_")[1];
+        if (!data.startsWith("letter")) return;
         String inlineMessageId = callbackQuery.getInlineMessageId().get();
+        Match match = matches.getMatchFromId(inlineMessageId);
+
+        if (match == null) {
+
+            return;
+        }
+
         long userId = callbackQuery.getSender().getId();
         Locale locale = getLocale(userId);
-        Words words = wordsProvider.getWordsFromLocale(locale);
-        String randomWord = words.getRandomWordFromCategory(category);
-        Match match = matches.startNewMatchRandomWord(inlineMessageId, randomWord, category);
+        char letter = data.split("_")[1].charAt(0);
 
+        if (match.isLetterAlreadyGuessed(letter)) {
+
+            return;
+        }
+
+        boolean result = match.guessLetter(letter);
         String message = getParametirizedString("message_match", userId, callbackQuery.getSender(), match);
-        InlineKeyboardMarkup keyboard = AlphabetKeyboard.generate(wordsProvider.getAlphabetFromLocale(locale), Collections.emptyList());
 
         EditMessageText editMessageText = new EditMessageText()
                 .text(Text.parseHtml(message))
-                .inlineMessage(inlineMessageId)
-                .replyMarkup(keyboard);
+                .inlineMessage(inlineMessageId);
+
+        InlineKeyboardMarkup keyboard;
+        if (!match.isMatchEnded()) {
+            keyboard = AlphabetKeyboard.generate(wordsProvider.getAlphabetFromLocale(locale), match.getGuessedLetters());
+        } else {
+            keyboard = new InlineKeyboardMarkup(new BackButton(userId));
+            matches.deleteMatch(inlineMessageId);
+        }
+        editMessageText.replyMarkup(keyboard);
         bot.execute(editMessageText);
+
     }
+
+
 }

@@ -26,9 +26,11 @@ class MatchTest {
     @Test
     void isMatchEndedLives() {
         Match match = new Match("bye", "vocabulary");
-        for (int i = 0; i < 5; i++) {
-            match.decreaseLives();
-        }
+        match.guessLetter('a');
+        match.guessLetter('c');
+        match.guessLetter('d');
+        match.guessLetter('f');
+        match.guessLetter('g');
         assertTrue(match.isMatchEnded());
     }
 

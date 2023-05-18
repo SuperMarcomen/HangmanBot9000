@@ -25,11 +25,13 @@ public class Match {
 
     public boolean guessLetter(char letter) {
         char lowerCaseLetter = Character.toLowerCase(letter);
-        guessedLetters.add(letter);
-        return word.contains(String.valueOf(lowerCaseLetter));
+        guessedLetters.add(lowerCaseLetter);
+        boolean result = word.toLowerCase().contains(String.valueOf(lowerCaseLetter));
+        if (!result) decreaseLives();
+        return result;
     }
 
-    public void decreaseLives() {
+    private void decreaseLives() {
         lives--;
     }
 
@@ -41,7 +43,8 @@ public class Match {
     public String getCurrentStatusWord() {
         StringBuilder currentWord = new StringBuilder();
         for (char c : word.toCharArray()) {
-            if (guessedLetters.contains(c)) {
+            char lowerCase = Character.toLowerCase(c);
+            if (guessedLetters.contains(lowerCase)) {
                 currentWord.append(c);
             } else {
                 currentWord.append(WORD_FILLER);
@@ -52,7 +55,7 @@ public class Match {
 
     private boolean isWordGuessed() {
         for (char c : word.toCharArray()) {
-            if (!guessedLetters.contains(c)) {
+            if (!guessedLetters.contains(Character.toLowerCase(c))) {
                 return false;
             }
         }
@@ -65,5 +68,9 @@ public class Match {
 
     public int getLives() {
         return lives;
+    }
+
+    public List<Character> getGuessedLetters() {
+        return guessedLetters;
     }
 }

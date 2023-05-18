@@ -6,6 +6,7 @@ import it.marcodemartino.hangmanbot.game.Matches;
 import it.marcodemartino.hangmanbot.game.words.WordsProvider;
 import it.marcodemartino.hangmanbot.game.words.WordsProviderTxt;
 import it.marcodemartino.hangmanbot.telegram.callback.CategoryChosenCallback;
+import it.marcodemartino.hangmanbot.telegram.callback.LetterClickCallback;
 import it.marcodemartino.hangmanbot.telegram.callback.NewMatchCallback;
 import it.marcodemartino.hangmanbot.telegram.inline.InlineResults;
 
@@ -32,7 +33,8 @@ public class HangmanBot extends LongPollingBot {
         events.registerUpdateHandlers(
                 new InlineResults(bot),
                 new NewMatchCallback(bot, wordsProvider),
-                new CategoryChosenCallback(bot, wordsProvider, matches)
+                new CategoryChosenCallback(bot, wordsProvider, matches),
+                new LetterClickCallback(bot, wordsProvider, matches)
         );
     }
 }
