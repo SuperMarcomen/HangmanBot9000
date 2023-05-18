@@ -16,15 +16,15 @@ class UserStatsDAOTest {
 
     @Test
     @Order(1)
-    void testGetAll() throws ExecutionException, InterruptedException {
-        assertFalse(userStatsDAO.getAll().isEmpty());
+    void insert() throws ExecutionException, InterruptedException {
+        QueryResult queryResult = userStatsDAO.insert(userStats).get();
+        assertEquals(1, queryResult.getRowsAffected());
     }
 
     @Test
     @Order(2)
-    void insert() throws ExecutionException, InterruptedException {
-        QueryResult queryResult = userStatsDAO.insert(userStats).get();
-        assertEquals(1, queryResult.getRowsAffected());
+    void getAll() throws ExecutionException, InterruptedException {
+        assertFalse(userStatsDAO.getAll().isEmpty());
     }
 
     @Test

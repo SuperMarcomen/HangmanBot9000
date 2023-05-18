@@ -86,6 +86,7 @@ public class UserStatsDAO implements DAO<UserStats> {
 
     @Override
     public CompletableFuture<QueryResult> delete(UserStats userStats) {
+        cache.remove(userStats.getUserId());
         String sql = "DELETE FROM user_stats WHERE user_id = ?;";
         CompletableFuture<QueryResult> future = Database.sendPreparedStatement(
                 sql,
