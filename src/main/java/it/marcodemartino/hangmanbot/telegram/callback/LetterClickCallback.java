@@ -3,6 +3,7 @@ package it.marcodemartino.hangmanbot.telegram.callback;
 import io.github.ageofwar.telejam.Bot;
 import io.github.ageofwar.telejam.callbacks.CallbackDataHandler;
 import io.github.ageofwar.telejam.callbacks.CallbackQuery;
+import io.github.ageofwar.telejam.methods.AnswerCallbackQuery;
 import io.github.ageofwar.telejam.methods.EditMessageText;
 import io.github.ageofwar.telejam.replymarkups.InlineKeyboardMarkup;
 import io.github.ageofwar.telejam.text.Text;
@@ -16,6 +17,7 @@ import java.util.Locale;
 
 import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getLocale;
 import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getParametirizedString;
+import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getString;
 
 public class LetterClickCallback implements CallbackDataHandler {
 
@@ -38,17 +40,22 @@ public class LetterClickCallback implements CallbackDataHandler {
         String inlineMessageId = callbackQuery.getInlineMessageId().get();
         Match match = matches.getMatchFromId(inlineMessageId);
 
+        long userId = callbackQuery.getSender().getId();
         if (match == null) {
-
+            AnswerCallbackQuery answerInlineQuery = new AnswerCallbackQuery()
+                    .callbackQuery(callbackQuery)
+                    .text(getString("message_no_match_found", userId));
+            bot.execute(answerInlineQuery);
             return;
         }
 
-        long userId = callbackQuery.getSender().getId();
-        Locale locale = getLocale(userId);
         char letter = data.split("_")[1].charAt(0);
 
         if (match.isLetterAlreadyGuessed(letter)) {
-
+            AnswerCallbackQuery answerInlineQuery = new AnswerCallbackQuery()
+                    .callbackQuery(callbackQuery)
+                    .text(getString("message_letter_already_guessed", userId));
+            bot.execute(answerInlineQuery);
             return;
         }
 
@@ -59,6 +66,7 @@ public class LetterClickCallback implements CallbackDataHandler {
                 .text(Text.parseHtml(message))
                 .inlineMessage(inlineMessageId);
 
+        Locale locale = getLocale(userId);
         InlineKeyboardMarkup keyboard;
         if (!match.isMatchEnded()) {
             keyboard = AlphabetKeyboard.generate(wordsProvider.getAlphabetFromLocale(locale), match.getGuessedLetters());

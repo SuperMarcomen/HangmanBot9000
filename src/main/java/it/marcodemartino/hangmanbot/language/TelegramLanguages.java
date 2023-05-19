@@ -1,5 +1,6 @@
 package it.marcodemartino.hangmanbot.language;
 
+import io.github.ageofwar.telejam.text.Text;
 import io.github.ageofwar.telejam.users.User;
 import it.marcodemartino.hangmanbot.game.Match;
 
@@ -40,6 +41,10 @@ public class TelegramLanguages {
         Locale locale = getLocale(userId);
         ResourceBundle resourceBundle = ResourceBundle.getBundle("telegram/messages", locale);
         return resourceBundle.getString(key);
+    }
+
+    public static Text getStringAsText(String key, long userId) {
+        return Text.parseHtml(getString(key, userId));
     }
 
     public static Locale getLocale(long userId) {

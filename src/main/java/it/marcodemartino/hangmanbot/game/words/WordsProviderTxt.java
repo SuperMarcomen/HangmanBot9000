@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 public class WordsProviderTxt extends WordsProvider {
 
     private static final String ALPHABET_FOLDER = "alphabet";
+    private static final String WORD_FOLDER = "words";
     private static final String DIR_SEPARATOR = System.getProperty("file.separator");;
 
     public WordsProviderTxt() {
@@ -32,6 +33,8 @@ public class WordsProviderTxt extends WordsProvider {
         List<Path> txtFiles = getAllTxtFiles();
         for (Path txtFile : txtFiles) {
             String pathString = txtFile.toString();
+            // there are other files in the folder where the bot is running
+            if (!pathString.contains(ALPHABET_FOLDER) && !pathString.contains(WORD_FOLDER)) continue;
             String[] arguments = pathString.split(DIR_SEPARATOR + DIR_SEPARATOR);
             boolean alphabet = arguments[0].equals(ALPHABET_FOLDER);
             Locale locale = Locale.forLanguageTag(arguments[1]);
