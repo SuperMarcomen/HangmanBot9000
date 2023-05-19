@@ -1,8 +1,9 @@
-package it.marcodemartino.hangmanbot.game.stats;
+package it.marcodemartino.hangmanbot.game.stats.dao;
 
 import com.github.jasync.sql.db.QueryResult;
 import com.github.jasync.sql.db.RowData;
 import it.marcodemartino.hangmanbot.game.database.Database;
+import it.marcodemartino.hangmanbot.game.stats.entities.UserStats;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,13 +21,15 @@ public class UserStatsDAO implements DAO<UserStats> {
         cache = new HashMap<>();
     }
 
+    @Override
     public void initializeCache(List<UserStats> userStats) {
         for (UserStats userStat : userStats) {
             cache.put(userStat.getUserId(), userStat);
         }
     }
 
-    public boolean isUserPresent(long userId) {
+    @Override
+    public boolean isPresent(long userId) {
         return cache.containsKey(userId);
     }
 

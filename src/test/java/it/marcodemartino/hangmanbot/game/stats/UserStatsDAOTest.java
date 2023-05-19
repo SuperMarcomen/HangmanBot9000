@@ -1,6 +1,8 @@
 package it.marcodemartino.hangmanbot.game.stats;
 
 import com.github.jasync.sql.db.QueryResult;
+import it.marcodemartino.hangmanbot.game.stats.dao.UserStatsDAO;
+import it.marcodemartino.hangmanbot.game.stats.entities.UserStats;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 

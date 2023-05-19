@@ -1,4 +1,4 @@
-package it.marcodemartino.hangmanbot.game.stats;
+package it.marcodemartino.hangmanbot.game.stats.entities;
 
 public class UserStats {
 
@@ -14,6 +14,11 @@ public class UserStats {
         this.rightLetters = rightLetters;
         this.wrongLetters = wrongLetters;
         this.guessedWords = guessedWords;
+    }
+
+    public float getRatio() {
+        if (rightLetters + guessedWords == 0) return 0;
+        return (float) rightLetters / ((float) rightLetters + (float) wrongLetters);
     }
 
     public long getUserId() {

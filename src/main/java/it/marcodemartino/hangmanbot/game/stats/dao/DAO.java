@@ -1,4 +1,4 @@
-package it.marcodemartino.hangmanbot.game.stats;
+package it.marcodemartino.hangmanbot.game.stats.dao;
 
 import com.github.jasync.sql.db.QueryResult;
 
@@ -8,6 +8,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public interface DAO<T> {
+
+    void initializeCache(List<T> t);
+
+    boolean isPresent(long id);
 
     T get(long id) throws SQLException;
 
