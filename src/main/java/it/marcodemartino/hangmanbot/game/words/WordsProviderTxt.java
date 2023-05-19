@@ -21,7 +21,7 @@ public class WordsProviderTxt extends WordsProvider {
 
     private static final String ALPHABET_FOLDER = "alphabet";
     private static final String WORD_FOLDER = "words";
-    private static final String DIR_SEPARATOR = System.getProperty("file.separator");;
+    private static final String DIR_SEPARATOR = System.getProperty("file.separator");
 
     public WordsProviderTxt() {
         wordsMap = new RandomHashMap<>();

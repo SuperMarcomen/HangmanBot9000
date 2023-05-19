@@ -34,13 +34,21 @@ public class UserDataDAO implements DAO<UserData> {
     }
 
     @Override
+    public UserData getOrCreate(long userId) {
+        if (isPresent(userId)) return cache.get(userId);
+        UserData userStats = new UserData(userId, "");
+        insert(userStats);
+        return userStats;
+    }
+
+    @Override
     public UserData get(long id) throws SQLException {
         return cache.get(id);
     }
 
     @Override
     public List<UserData> getAll() throws ExecutionException, InterruptedException {
-        String query = "SELECT * FROM user_stats";
+        String query = "SELECT * FROM user_data";
         CompletableFuture<QueryResult> future = Database.sendPreparedStatement(query);
         QueryResult queryResult = future.get();
         List<UserData> userDataList = new ArrayList<>();
@@ -69,7 +77,7 @@ public class UserDataDAO implements DAO<UserData> {
     @Override
     public CompletableFuture<QueryResult> update(UserData userData) {
         cache.put(userData.getUserId(), userData);
-        String sql = "UPDATE user_stats SET name = ? WHERE user_id = ?;";
+        String sql = "UPDATE user_data SET name = ? WHERE user_id = ?;";
         CompletableFuture<QueryResult> future = Database.sendPreparedStatement(
                 sql,
                 userData.getName(),
@@ -81,7 +89,7 @@ public class UserDataDAO implements DAO<UserData> {
     @Override
     public CompletableFuture<QueryResult> delete(UserData userData) {
         cache.remove(userData.getUserId());
-        String sql = "DELETE FROM user_stats WHERE user_id = ?;";
+        String sql = "DELETE FROM user_data WHERE user_id = ?;";
         CompletableFuture<QueryResult> future = Database.sendPreparedStatement(
                 sql,
                 userData.getUserId()

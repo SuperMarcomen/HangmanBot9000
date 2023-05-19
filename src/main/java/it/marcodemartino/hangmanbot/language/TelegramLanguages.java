@@ -13,6 +13,7 @@ public class TelegramLanguages {
     private static final String NAME_OF_USER = "%username";
     private static final String WORD_CURRENT_STATUS = "%current_word";
     private static final String WORD_CATEGORY = "%category";
+    private static final String WORD_TO_GUESS = "%word";
     private static final String LIVES = "%lives";
 
 
@@ -34,6 +35,7 @@ public class TelegramLanguages {
         return message
                 .replace(WORD_CURRENT_STATUS, match.getCurrentStatusWord())
                 .replace(WORD_CATEGORY, match.getCategory())
+                .replace(WORD_TO_GUESS, match.getWord())
                 .replace(LIVES, String.valueOf(match.getLives()));
     }
 

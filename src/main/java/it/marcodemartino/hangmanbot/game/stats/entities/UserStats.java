@@ -6,18 +6,16 @@ public class UserStats {
     private int startedMatches;
     private int rightLetters;
     private int wrongLetters;
-    private int guessedWords;
 
-    public UserStats(long userId, int startedMatches, int rightLetters, int wrongLetters, int guessedWords) {
+    public UserStats(long userId, int startedMatches, int rightLetters, int wrongLetters) {
         this.userId = userId;
         this.startedMatches = startedMatches;
         this.rightLetters = rightLetters;
         this.wrongLetters = wrongLetters;
-        this.guessedWords = guessedWords;
     }
 
     public float getRatio() {
-        if (rightLetters + guessedWords == 0) return 0;
+        if (rightLetters + wrongLetters == 0) return 0;
         return (float) rightLetters / ((float) rightLetters + (float) wrongLetters);
     }
 
@@ -49,11 +47,4 @@ public class UserStats {
         this.wrongLetters = wrongLetters;
     }
 
-    public int getGuessedWords() {
-        return guessedWords;
-    }
-
-    public void setGuessedWords(int guessedWords) {
-        this.guessedWords = guessedWords;
-    }
 }

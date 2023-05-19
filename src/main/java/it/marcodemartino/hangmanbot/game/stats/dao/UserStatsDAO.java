@@ -34,6 +34,14 @@ public class UserStatsDAO implements DAO<UserStats> {
     }
 
     @Override
+    public UserStats getOrCreate(long userId) {
+        if (isPresent(userId)) return cache.get(userId);
+        UserStats userStats = new UserStats(userId, 0, 0, 0);
+        insert(userStats);
+        return userStats;
+    }
+
+    @Override
     public UserStats get(long id) throws SQLException {
         return cache.get(id);
     }
@@ -49,8 +57,7 @@ public class UserStatsDAO implements DAO<UserStats> {
                     row.getLong(0),
                     row.getInt(1),
                     row.getInt(2),
-                    row.getInt(3),
-                    row.getInt(4)
+                    row.getInt(3)
             );
             userStatsList.add(userStats);
         }
@@ -60,14 +67,13 @@ public class UserStatsDAO implements DAO<UserStats> {
     @Override
     public CompletableFuture<QueryResult> insert(UserStats userStats) {
         cache.put(userStats.getUserId(), userStats);
-        String sql = "INSERT INTO user_stats (user_id, started_matches, right_letters, wrong_letters, words_guessed) VALUES (?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO user_stats (user_id, started_matches, right_letters, wrong_letters) VALUES (?, ?, ?, ?);";
         CompletableFuture<QueryResult> future = Database.sendPreparedStatement(
                 sql,
                 userStats.getUserId(),
                 userStats.getStartedMatches(),
                 userStats.getRightLetters(),
-                userStats.getWrongLetters(),
-                userStats.getGuessedWords()
+                userStats.getWrongLetters()
                 );
         return future;
     }
@@ -75,13 +81,12 @@ public class UserStatsDAO implements DAO<UserStats> {
     @Override
     public CompletableFuture<QueryResult> update(UserStats userStats) {
         cache.put(userStats.getUserId(), userStats);
-        String sql = "UPDATE user_stats SET started_matches = ?, right_letters = ?, wrong_letters = ?, words_guessed = ? WHERE user_id = ?;";
+        String sql = "UPDATE user_stats SET started_matches = ?, right_letters = ?, wrong_letters = ? WHERE user_id = ?;";
         CompletableFuture<QueryResult> future = Database.sendPreparedStatement(
                 sql,
                 userStats.getStartedMatches(),
                 userStats.getRightLetters(),
                 userStats.getWrongLetters(),
-                userStats.getGuessedWords(),
                 userStats.getUserId()
                 );
         return future;

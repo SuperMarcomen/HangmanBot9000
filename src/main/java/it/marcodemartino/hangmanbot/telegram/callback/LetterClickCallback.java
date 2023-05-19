@@ -9,6 +9,9 @@ import io.github.ageofwar.telejam.replymarkups.InlineKeyboardMarkup;
 import io.github.ageofwar.telejam.text.Text;
 import it.marcodemartino.hangmanbot.game.Match;
 import it.marcodemartino.hangmanbot.game.Matches;
+import it.marcodemartino.hangmanbot.game.stats.dao.DAO;
+import it.marcodemartino.hangmanbot.game.stats.entities.UserData;
+import it.marcodemartino.hangmanbot.game.stats.entities.UserStats;
 import it.marcodemartino.hangmanbot.game.words.WordsProvider;
 import it.marcodemartino.hangmanbot.telegram.buttons.BackButton;
 import it.marcodemartino.hangmanbot.telegram.keyboard.AlphabetKeyboard;
@@ -24,11 +27,16 @@ public class LetterClickCallback implements CallbackDataHandler {
     private final Bot bot;
     private final WordsProvider wordsProvider;
     private final Matches matches;
+    private final DAO<UserStats> userStatsDAO;
+    private final DAO<UserData> userDataDAO;
 
-    public LetterClickCallback(Bot bot, WordsProvider wordsProvider, Matches matches) {
+
+    public LetterClickCallback(Bot bot, WordsProvider wordsProvider, Matches matches, DAO<UserStats> userStatsDAO, DAO<UserData> userDataDAO) {
         this.bot = bot;
         this.wordsProvider = wordsProvider;
         this.matches = matches;
+        this.userStatsDAO = userStatsDAO;
+        this.userDataDAO = userDataDAO;
     }
 
     @Override
@@ -60,11 +68,11 @@ public class LetterClickCallback implements CallbackDataHandler {
         }
 
         boolean result = match.guessLetter(letter);
-        String message = getParametirizedString("message_match", userId, callbackQuery.getSender(), match);
+        updateUserStats(userId, result);
+        updateUserName(userId, callbackQuery.getSender().getFirstName());
 
-        EditMessageText editMessageText = new EditMessageText()
-                .text(Text.parseHtml(message))
-                .inlineMessage(inlineMessageId);
+        StringBuilder message = new StringBuilder(
+                getParametirizedString("message_match", userId, callbackQuery.getSender(), match));
 
         Locale locale = getLocale(userId);
         InlineKeyboardMarkup keyboard;
@@ -73,11 +81,38 @@ public class LetterClickCallback implements CallbackDataHandler {
         } else {
             keyboard = new InlineKeyboardMarkup(new BackButton(userId));
             matches.deleteMatch(inlineMessageId);
+            message.append(getParametirizedString("message_reveal_word", userId, callbackQuery.getSender(), match));
         }
-        editMessageText.replyMarkup(keyboard);
+
+        EditMessageText editMessageText = new EditMessageText()
+                .inlineMessage(inlineMessageId)
+                .replyMarkup(keyboard)
+                .text(Text.parseHtml(message.toString()));
         bot.execute(editMessageText);
 
     }
 
+    private void updateUserName(long userId, String name) {
+        if (userDataDAO.isPresent(userId)) {
+            UserData userData = new UserData(userId, name);
+            userDataDAO.insert(userData);
+        } else {
+            UserData userData = userDataDAO.getOrCreate(userId);
+            if (userData.getName().equals(name)) return;
+            userData.setName(name);
+            userDataDAO.update(userData);
+        }
+    }
+
+    private void updateUserStats(long userId, boolean result) {
+        UserStats userStats = userStatsDAO.getOrCreate(userId);
+
+        if (result) {
+            userStats.setRightLetters(userStats.getRightLetters() + 1);
+        } else {
+            userStats.setWrongLetters(userStats.getWrongLetters() + 1);
+        }
+        userStatsDAO.update(userStats);
+    }
 
 }

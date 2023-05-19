@@ -62,6 +62,10 @@ public class Match {
         return true;
     }
 
+    public String getWord() {
+        return word;
+    }
+
     public String getCategory() {
         return category;
     }

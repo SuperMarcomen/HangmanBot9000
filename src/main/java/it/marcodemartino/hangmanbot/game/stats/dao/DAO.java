@@ -13,6 +13,8 @@ public interface DAO<T> {
 
     boolean isPresent(long id);
 
+    T getOrCreate(long id);
+
     T get(long id) throws SQLException;
 
     List<T> getAll() throws ExecutionException, InterruptedException;

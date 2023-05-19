@@ -3,6 +3,7 @@ package it.marcodemartino.hangmanbot.telegram;
 import io.github.ageofwar.telejam.Bot;
 import io.github.ageofwar.telejam.LongPollingBot;
 import it.marcodemartino.hangmanbot.game.Matches;
+import it.marcodemartino.hangmanbot.game.stats.UserStatsService;
 import it.marcodemartino.hangmanbot.game.words.WordsProvider;
 import it.marcodemartino.hangmanbot.game.words.WordsProviderTxt;
 import it.marcodemartino.hangmanbot.telegram.callback.BackStartCallback;
@@ -32,11 +33,12 @@ public class HangmanBot extends LongPollingBot {
         super(bot);
         WordsProvider wordsProvider = new WordsProviderTxt();
         Matches matches = new Matches();
+        UserStatsService userStatsService = new UserStatsService();
         events.registerUpdateHandlers(
                 new InlineResults(bot),
                 new NewMatchCallback(bot, wordsProvider),
-                new CategoryChosenCallback(bot, wordsProvider, matches),
-                new LetterClickCallback(bot, wordsProvider, matches),
+                new CategoryChosenCallback(bot, wordsProvider, matches, userStatsService.getUserStatsDAO()),
+                new LetterClickCallback(bot, wordsProvider, matches, userStatsService.getUserStatsDAO(), userStatsService.getUserDataDAO()),
                 new BackStartCallback(bot)
         );
     }

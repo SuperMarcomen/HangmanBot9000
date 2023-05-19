@@ -83,4 +83,12 @@ public class UserStatsService {
         }
         return userData;
     }
+
+    public DAO<UserStats> getUserStatsDAO() {
+        return userStatsDAO;
+    }
+
+    public DAO<UserData> getUserDataDAO() {
+        return userDataDAO;
+    }
 }
