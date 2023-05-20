@@ -13,7 +13,7 @@ import it.marcodemartino.hangmanbot.game.stats.dao.DAO;
 import it.marcodemartino.hangmanbot.game.stats.entities.UserData;
 import it.marcodemartino.hangmanbot.game.stats.entities.UserStats;
 import it.marcodemartino.hangmanbot.game.words.WordsProvider;
-import it.marcodemartino.hangmanbot.telegram.buttons.BackButton;
+import it.marcodemartino.hangmanbot.telegram.buttons.back.BackStartButton;
 import it.marcodemartino.hangmanbot.telegram.keyboard.AlphabetKeyboard;
 
 import java.util.Locale;
@@ -69,7 +69,7 @@ public class LetterClickCallback implements CallbackDataHandler {
 
         boolean result = match.guessLetter(letter);
         updateUserStats(userId, result);
-        updateUserName(userId, callbackQuery.getSender().getFirstName());
+        updateUserName(userId, callbackQuery.getSender().getLocale(), callbackQuery.getSender().getFirstName());
 
         StringBuilder message = new StringBuilder(
                 getParametirizedString("message_match", userId, callbackQuery.getSender(), match));
@@ -79,7 +79,7 @@ public class LetterClickCallback implements CallbackDataHandler {
         if (!match.isMatchEnded()) {
             keyboard = AlphabetKeyboard.generate(wordsProvider.getAlphabetFromLocale(locale), match.getGuessedLetters());
         } else {
-            keyboard = new InlineKeyboardMarkup(new BackButton(userId));
+            keyboard = new InlineKeyboardMarkup(new BackStartButton(userId));
             matches.deleteMatch(inlineMessageId);
             message.append(getParametirizedString("message_reveal_word", userId, callbackQuery.getSender(), match));
         }
@@ -92,9 +92,9 @@ public class LetterClickCallback implements CallbackDataHandler {
 
     }
 
-    private void updateUserName(long userId, String name) {
+    private void updateUserName(long userId, Locale locale, String name) {
         if (userDataDAO.isPresent(userId)) {
-            UserData userData = new UserData(userId, name);
+            UserData userData = new UserData(userId, name, locale);
             userDataDAO.insert(userData);
         } else {
             UserData userData = userDataDAO.getOrCreate(userId);

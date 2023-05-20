@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
@@ -79,7 +80,7 @@ public class UserStatsService {
             userData = userDataDAO.get(userId);
         } catch (SQLException e) {
             System.err.println("An error occurred while loading the data from the database: " + e.getMessage());
-            userData = new UserData(userId, "");
+            userData = new UserData(userId, "", Locale.ENGLISH);
         }
         return userData;
     }

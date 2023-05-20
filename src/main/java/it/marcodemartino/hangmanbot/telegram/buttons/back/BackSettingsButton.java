@@ -1,15 +1,15 @@
-package it.marcodemartino.hangmanbot.telegram.buttons;
+package it.marcodemartino.hangmanbot.telegram.buttons.back;
 
 import io.github.ageofwar.telejam.inline.CallbackDataInlineKeyboardButton;
 
 import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getString;
 
-public class BackButton extends CallbackDataInlineKeyboardButton {
+public class BackSettingsButton extends CallbackDataInlineKeyboardButton {
 
-    public BackButton(long userId) {
+    public BackSettingsButton(long userId) {
         super(
                 getString("button_back_start", userId),
-                "back_start"
+                "back_settings"
         );
     }
 }

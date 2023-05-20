@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -36,9 +37,9 @@ public class UserDataDAO implements DAO<UserData> {
     @Override
     public UserData getOrCreate(long userId) {
         if (isPresent(userId)) return cache.get(userId);
-        UserData userStats = new UserData(userId, "");
-        insert(userStats);
-        return userStats;
+        UserData userData = new UserData(userId, "", Locale.ENGLISH);
+        insert(userData);
+        return userData;
     }
 
     @Override
@@ -55,8 +56,8 @@ public class UserDataDAO implements DAO<UserData> {
         for (RowData row : queryResult.getRows()) {
             UserData userData = new UserData(
                     row.getLong(0),
-                    row.getString(1)
-            );
+                    row.getString(1),
+                    Locale.forLanguageTag(row.getString(2)));
             userDataList.add(userData);
         }
         return userDataList;
@@ -77,10 +78,11 @@ public class UserDataDAO implements DAO<UserData> {
     @Override
     public CompletableFuture<QueryResult> update(UserData userData) {
         cache.put(userData.getUserId(), userData);
-        String sql = "UPDATE user_data SET name = ? WHERE user_id = ?;";
+        String sql = "UPDATE user_data SET name = ?, locale = ? WHERE user_id = ?;";
         CompletableFuture<QueryResult> future = Database.sendPreparedStatement(
                 sql,
                 userData.getName(),
+                userData.getLocale().getLanguage(),
                 userData.getUserId()
                 );
         return future;

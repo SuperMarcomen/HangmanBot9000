@@ -8,7 +8,7 @@ import io.github.ageofwar.telejam.inline.InlineKeyboardButton;
 import io.github.ageofwar.telejam.methods.EditMessageText;
 import io.github.ageofwar.telejam.replymarkups.InlineKeyboardMarkup;
 import it.marcodemartino.hangmanbot.game.words.WordsProvider;
-import it.marcodemartino.hangmanbot.telegram.buttons.BackButton;
+import it.marcodemartino.hangmanbot.telegram.buttons.back.BackStartButton;
 import it.marcodemartino.hangmanbot.telegram.keyboard.ExtraButtonInlineKeyboardMarkup;
 
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class NewMatchCallback implements CallbackDataHandler {
         List<InlineKeyboardButton> categoriesButtons = categories.stream()
                 .map(category -> new CallbackDataInlineKeyboardButton(category, "category_" + category))
                 .collect(Collectors.toList());
-        return ExtraButtonInlineKeyboardMarkup.fromColumnsWithExtraButton(2, new BackButton(userId), categoriesButtons);
+        return ExtraButtonInlineKeyboardMarkup.fromColumnsWithExtraButton(2, new BackStartButton(userId), categoriesButtons);
     }
 
 }
