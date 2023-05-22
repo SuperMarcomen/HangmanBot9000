@@ -1,38 +1,43 @@
 package it.marcodemartino.hangmanbot.game;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.Collator;
 
 public class Match {
 
     private static final int LIVES_AMOUNT = 5;
+    private static final int ALPHABET_SIZE = 26;
     public static final char WORD_FILLER = '-';
     private final String word;
     private final String category;
-    private final List<Character> guessedLetters;
+    private final char[] guessedLetters;
+    private final Collator collator;
+    private int writeIndex;
     private int lives;
 
     public Match(String word, String category) {
         this.word = word;
         this.category = category;
-        guessedLetters = new ArrayList<>();
+        guessedLetters = new char[ALPHABET_SIZE];
+        collator = Collator.getInstance();
+        collator.setDecomposition(2);
+        collator.setStrength(0);
+        writeIndex = 0;
         lives = LIVES_AMOUNT;
     }
 
     public boolean isLetterAlreadyGuessed(char letter) {
-        return guessedLetters.contains(Character.toLowerCase(letter));
+        for (char guessedLetter : guessedLetters) {
+            if (areLettersIdentical(guessedLetter, letter)) return true;
+        }
+        return false;
     }
 
     public boolean guessLetter(char letter) {
-        char lowerCaseLetter = Character.toLowerCase(letter);
-        guessedLetters.add(lowerCaseLetter);
-        boolean result = word.toLowerCase().contains(String.valueOf(lowerCaseLetter));
+        guessedLetters[writeIndex++] = letter;
+        boolean result = doesWordContainLetter(letter);
+
         if (!result) decreaseLives();
         return result;
-    }
-
-    private void decreaseLives() {
-        lives--;
     }
 
     public boolean isMatchEnded() {
@@ -43,8 +48,11 @@ public class Match {
     public String getCurrentStatusWord() {
         StringBuilder currentWord = new StringBuilder();
         for (char c : word.toCharArray()) {
-            char lowerCase = Character.toLowerCase(c);
-            if (guessedLetters.contains(lowerCase)) {
+            if (Character.isSpaceChar(c) || !Character.isAlphabetic(c)) {
+                currentWord.append(c);
+                continue;
+            }
+            if (isLetterAlreadyGuessed(c)) {
                 currentWord.append(c);
             } else {
                 currentWord.append(WORD_FILLER);
@@ -53,9 +61,30 @@ public class Match {
         return currentWord.toString();
     }
 
+    private boolean areLettersIdentical(char first, char second) {
+        int result = collator.compare(String.valueOf(first), String.valueOf(second));
+        return  result == 0;
+    }
+
+    private boolean doesWordContainLetter(char letter) {
+        boolean result = false;
+        for (char c : word.toCharArray()) {
+            if (areLettersIdentical(c, letter)) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    private void decreaseLives() {
+        lives--;
+    }
+
     private boolean isWordGuessed() {
         for (char c : word.toCharArray()) {
-            if (!guessedLetters.contains(Character.toLowerCase(c))) {
+            if (Character.isSpaceChar(c) || !Character.isAlphabetic(c)) continue;
+            if (!isLetterAlreadyGuessed(c)) {
                 return false;
             }
         }
@@ -74,7 +103,4 @@ public class Match {
         return lives;
     }
 
-    public List<Character> getGuessedLetters() {
-        return guessedLetters;
-    }
 }

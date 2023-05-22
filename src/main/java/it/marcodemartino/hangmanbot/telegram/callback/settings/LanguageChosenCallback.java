@@ -3,6 +3,7 @@ package it.marcodemartino.hangmanbot.telegram.callback.settings;
 import io.github.ageofwar.telejam.Bot;
 import io.github.ageofwar.telejam.callbacks.CallbackDataHandler;
 import io.github.ageofwar.telejam.callbacks.CallbackQuery;
+import io.github.ageofwar.telejam.methods.AnswerCallbackQuery;
 import io.github.ageofwar.telejam.methods.EditMessageText;
 import it.marcodemartino.hangmanbot.game.stats.dao.DAO;
 import it.marcodemartino.hangmanbot.game.stats.entities.UserData;
@@ -10,6 +11,7 @@ import it.marcodemartino.hangmanbot.game.stats.entities.UserData;
 import java.util.Locale;
 
 import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getString;
+import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getStringAsText;
 
 public class LanguageChosenCallback extends LanguageCallback implements CallbackDataHandler {
 
@@ -31,19 +33,29 @@ public class LanguageChosenCallback extends LanguageCallback implements Callback
 
         long userId = callbackQuery.getSender().getId();
         String inlineMessageId = callbackQuery.getInlineMessageId().get();
-        updateUserLanguage(userId, Locale.forLanguageTag(query.split("_")[1]));
+        String languageTag = query.split("_")[1];
+        boolean changeSuccessful = updateUserLanguage(userId, Locale.forLanguageTag(languageTag));
+        if (!changeSuccessful) {
+            AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery()
+                    .callbackQuery(callbackQuery)
+                    .text(getString("message_same_language", userId));
+            bot.execute(answerCallbackQuery);
+            return;
+        }
 
         EditMessageText editMessageText = new EditMessageText()
-                .text(getString("message_settings_choose", userId))
+                .text(getStringAsText("message_settings_choose_language", userId))
                 .inlineMessage(inlineMessageId)
                 .replyMarkup(generateSettingsKeyboard(userId));
         bot.execute(editMessageText);
     }
 
-    private void updateUserLanguage(long userId, Locale locale) {
+    private boolean updateUserLanguage(long userId, Locale locale) {
         UserData userData = userDataDAO.getOrCreate(userId);
+        if (userData.getLocale().equals(locale)) return false;
         userData.setLocale(locale);
         userDataDAO.update(userData);
+        return true;
     }
 
 }

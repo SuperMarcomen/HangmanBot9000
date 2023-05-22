@@ -14,7 +14,6 @@ import it.marcodemartino.hangmanbot.game.words.Words;
 import it.marcodemartino.hangmanbot.game.words.WordsProvider;
 import it.marcodemartino.hangmanbot.telegram.keyboard.AlphabetKeyboard;
 
-import java.util.Collections;
 import java.util.Locale;
 
 import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getLocale;
@@ -51,7 +50,7 @@ public class CategoryChosenCallback implements CallbackDataHandler {
         updateStartedMatches(userId);
 
         String message = getParametirizedString("message_match", userId, callbackQuery.getSender(), match);
-        InlineKeyboardMarkup keyboard = AlphabetKeyboard.generate(wordsProvider.getAlphabetFromLocale(locale), Collections.emptyList());
+        InlineKeyboardMarkup keyboard = AlphabetKeyboard.generate(wordsProvider.getAlphabetFromLocale(locale), match);
 
         EditMessageText editMessageText = new EditMessageText()
                 .text(Text.parseHtml(message))

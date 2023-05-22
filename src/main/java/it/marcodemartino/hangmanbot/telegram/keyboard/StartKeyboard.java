@@ -8,9 +8,13 @@ import it.marcodemartino.hangmanbot.telegram.buttons.SettingsButton;
 public class StartKeyboard {
 
     public static InlineKeyboardMarkup generate(long userId) {
-        return new InlineKeyboardMarkup(new InlineKeyboardButton[] {
-                new NewMatchButton(userId),
-                new SettingsButton(userId)
+        return new InlineKeyboardMarkup(new InlineKeyboardButton[][] {
+                {
+                        new NewMatchButton(userId),
+                },
+                {
+                        new SettingsButton(userId)
+                }
         });
     }
 }

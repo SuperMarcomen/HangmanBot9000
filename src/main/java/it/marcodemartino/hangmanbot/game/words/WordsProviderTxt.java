@@ -35,7 +35,7 @@ public class WordsProviderTxt extends WordsProvider {
             String pathString = txtFile.toString();
             // there are other files in the folder where the bot is running
             if (!pathString.contains(ALPHABET_FOLDER) && !pathString.contains(WORD_FOLDER)) continue;
-            String[] arguments = pathString.split(DIR_SEPARATOR + DIR_SEPARATOR);
+            String[] arguments = pathString.split(escapeSeparator(DIR_SEPARATOR));
             boolean alphabet = arguments[0].equals(ALPHABET_FOLDER);
             Locale locale = Locale.forLanguageTag(arguments[1]);
             String category = "";
@@ -45,6 +45,14 @@ public class WordsProviderTxt extends WordsProvider {
             }
 
             loadDataForLocale(txtFile, locale, category, alphabet);
+        }
+    }
+
+    private String escapeSeparator(String separator) {
+        if (separator.equals("\\")) {
+            return "\\\\";
+        } else {
+            return separator;
         }
     }
 

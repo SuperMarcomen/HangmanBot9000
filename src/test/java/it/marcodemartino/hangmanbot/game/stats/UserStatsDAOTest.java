@@ -1,11 +1,13 @@
 package it.marcodemartino.hangmanbot.game.stats;
 
 import com.github.jasync.sql.db.QueryResult;
+import it.marcodemartino.hangmanbot.game.database.Database;
 import it.marcodemartino.hangmanbot.game.stats.dao.DAO;
 import it.marcodemartino.hangmanbot.game.stats.dao.UserDataDAO;
 import it.marcodemartino.hangmanbot.game.stats.dao.UserStatsDAO;
 import it.marcodemartino.hangmanbot.game.stats.entities.UserData;
 import it.marcodemartino.hangmanbot.game.stats.entities.UserStats;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,11 @@ class UserStatsDAOTest {
     private final UserStats userStats = new UserStats(1234, 1, 2, 3);
     private final DAO<UserData> userDataDAO = new UserDataDAO();
     private final DAO<UserStats> userStatsDAO = new UserStatsDAO();
+
+    @BeforeEach
+    void init() {
+        Database.initializeConnection("");
+    }
 
     @Test
     @Order(1)

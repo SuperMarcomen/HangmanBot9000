@@ -50,4 +50,35 @@ class MatchTest {
         match.guessLetter('o');
         assertEquals("--ll--o--", match.getCurrentStatusWord());
     }
+
+    @Test
+    void testAccents() {
+        Match match = new Match("Äpfel", "fruit");
+        match.guessLetter('ä');
+        assertEquals("Ä----", match.getCurrentStatusWord());
+    }
+
+    @Test
+    void testSpaces() {
+        Match match = new Match("balena grigia", "animal");
+        match.guessLetter('a');
+        assertEquals("-a---a -----a", match.getCurrentStatusWord());
+        match.guessLetter('b');
+        match.guessLetter('a');
+        match.guessLetter('l');
+        match.guessLetter('e');
+        match.guessLetter('n');
+        match.guessLetter('g');
+        match.guessLetter('r');
+        match.guessLetter('i');
+        assertEquals("balena grigia", match.getCurrentStatusWord());
+        assertTrue(match.isMatchEnded());
+    }
+
+    @Test
+    void testNonAlphabeticChar() {
+        Match match = new Match("HQ9+", "esolang");
+        match.guessLetter('h');
+        assertEquals("H-9+", match.getCurrentStatusWord());
+    }
 }

@@ -69,7 +69,7 @@ public class LetterClickCallback implements CallbackDataHandler {
 
         boolean result = match.guessLetter(letter);
         updateUserStats(userId, result);
-        updateUserName(userId, callbackQuery.getSender().getLocale(), callbackQuery.getSender().getFirstName());
+        updateUserName(userId, callbackQuery.getSender().getFirstName());
 
         StringBuilder message = new StringBuilder(
                 getParametirizedString("message_match", userId, callbackQuery.getSender(), match));
@@ -77,11 +77,15 @@ public class LetterClickCallback implements CallbackDataHandler {
         Locale locale = getLocale(userId);
         InlineKeyboardMarkup keyboard;
         if (!match.isMatchEnded()) {
-            keyboard = AlphabetKeyboard.generate(wordsProvider.getAlphabetFromLocale(locale), match.getGuessedLetters());
+            keyboard = AlphabetKeyboard.generate(wordsProvider.getAlphabetFromLocale(locale), match);
         } else {
             keyboard = new InlineKeyboardMarkup(new BackStartButton(userId));
             matches.deleteMatch(inlineMessageId);
-            message.append(getParametirizedString("message_reveal_word", userId, callbackQuery.getSender(), match));
+            if (match.getLives() == 0) {
+                message.append(getParametirizedString("message_reveal_word", userId, callbackQuery.getSender(), match));
+            } else {
+                message.append(getString("message_match_won", userId));
+            }
         }
 
         EditMessageText editMessageText = new EditMessageText()
@@ -92,15 +96,15 @@ public class LetterClickCallback implements CallbackDataHandler {
 
     }
 
-    private void updateUserName(long userId, Locale locale, String name) {
+    private void updateUserName(long userId, String name) {
         if (userDataDAO.isPresent(userId)) {
-            UserData userData = new UserData(userId, name, locale);
-            userDataDAO.insert(userData);
-        } else {
             UserData userData = userDataDAO.getOrCreate(userId);
             if (userData.getName().equals(name)) return;
             userData.setName(name);
             userDataDAO.update(userData);
+        } else {
+            UserData userData = new UserData(userId, name, Locale.ENGLISH);
+            userDataDAO.insert(userData);
         }
     }
 

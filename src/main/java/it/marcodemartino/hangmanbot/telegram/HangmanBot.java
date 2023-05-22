@@ -3,6 +3,7 @@ package it.marcodemartino.hangmanbot.telegram;
 import io.github.ageofwar.telejam.Bot;
 import io.github.ageofwar.telejam.LongPollingBot;
 import it.marcodemartino.hangmanbot.game.Matches;
+import it.marcodemartino.hangmanbot.game.database.Database;
 import it.marcodemartino.hangmanbot.game.stats.UserStatsService;
 import it.marcodemartino.hangmanbot.game.words.WordsProvider;
 import it.marcodemartino.hangmanbot.game.words.WordsProviderTxt;
@@ -21,20 +22,26 @@ import java.io.IOException;
 public class HangmanBot extends LongPollingBot {
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
+        if (args.length < 1) {
             System.err.println("Pass the token of the bot as an argument");
             return;
         }
 
         String token = args[0];
         Bot bot = Bot.fromToken(token);
-        try (HangmanBot hangmanBot = new HangmanBot(bot)) {
+        try (HangmanBot hangmanBot = new HangmanBot(bot, args)) {
             hangmanBot.run();
         }
     }
 
-    public HangmanBot(Bot bot) {
+    public HangmanBot(Bot bot, String[] args) {
         super(bot);
+        String password = "";
+        if (args.length == 2) {
+            password = args[1];
+        }
+        Database.initializeConnection(password);
+
         WordsProvider wordsProvider = new WordsProviderTxt();
         Matches matches = new Matches();
         UserStatsService userStatsService = new UserStatsService();

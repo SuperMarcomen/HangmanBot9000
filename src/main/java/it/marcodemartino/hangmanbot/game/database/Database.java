@@ -12,9 +12,7 @@ public class Database {
 
     private static final String URL = "jdbc:mysql://localhost:3306/hangmanbot";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
-    private static final Connection connection = MySQLConnectionBuilder.createConnectionPool(
-            URL + "?user=" + USER  + "&password=" + PASSWORD);
+    private static Connection connection;
 
     private Database() {}
 
@@ -26,4 +24,8 @@ public class Database {
         connection.disconnect().get();
     }
 
+    public static void initializeConnection(String password) {
+        connection = MySQLConnectionBuilder.createConnectionPool(
+                URL + "?user=" + USER  + "&password=" + password);
+    }
 }

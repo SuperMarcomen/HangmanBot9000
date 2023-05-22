@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getLocale;
-import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getString;
+import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getStringAsText;
 
 public class NewMatchCallback implements CallbackDataHandler {
 
@@ -42,7 +42,7 @@ public class NewMatchCallback implements CallbackDataHandler {
         Set<String> categories = wordsProvider.getCategoriesFromLocale(locale);
 
         EditMessageText editMessageText = new EditMessageText()
-                .text(getString("message_choose_categories", userId))
+                .text(getStringAsText("message_choose_categories", userId))
                 .inlineMessage(inlineMessageId)
                 .replyMarkup(generateCategoriesKeyboard(categories, userId));
         bot.execute(editMessageText);

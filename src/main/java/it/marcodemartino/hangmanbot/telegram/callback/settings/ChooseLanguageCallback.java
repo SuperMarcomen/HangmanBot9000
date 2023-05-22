@@ -5,7 +5,7 @@ import io.github.ageofwar.telejam.callbacks.CallbackDataHandler;
 import io.github.ageofwar.telejam.callbacks.CallbackQuery;
 import io.github.ageofwar.telejam.methods.EditMessageText;
 
-import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getString;
+import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getStringAsText;
 
 public class ChooseLanguageCallback extends LanguageCallback implements CallbackDataHandler {
 
@@ -26,7 +26,7 @@ public class ChooseLanguageCallback extends LanguageCallback implements Callback
         String inlineMessageId = callbackQuery.getInlineMessageId().get();
 
         EditMessageText editMessageText = new EditMessageText()
-                .text(getString("message_settings_choose", userId))
+                .text(getStringAsText("message_settings_choose_language", userId))
                 .inlineMessage(inlineMessageId)
                 .replyMarkup(generateSettingsKeyboard(userId));
         bot.execute(editMessageText);
