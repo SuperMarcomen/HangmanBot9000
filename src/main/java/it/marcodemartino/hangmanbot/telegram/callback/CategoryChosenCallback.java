@@ -49,7 +49,7 @@ public class CategoryChosenCallback implements CallbackDataHandler {
 
         updateStartedMatches(userId);
 
-        String message = getParametirizedString("message_match", userId, callbackQuery.getSender(), match);
+        String message = getParametirizedString("message_match", userId, callbackQuery.getSender().getFirstName(), match);
         InlineKeyboardMarkup keyboard = AlphabetKeyboard.generate(wordsProvider.getAlphabetFromLocale(locale), match);
 
         EditMessageText editMessageText = new EditMessageText()

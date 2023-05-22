@@ -72,7 +72,7 @@ public class LetterClickCallback implements CallbackDataHandler {
         updateUserName(userId, callbackQuery.getSender().getFirstName());
 
         StringBuilder message = new StringBuilder(
-                getParametirizedString("message_match", userId, callbackQuery.getSender(), match));
+                getParametirizedString("message_match", userId, callbackQuery.getSender().getFirstName(), match));
 
         Locale locale = getLocale(userId);
         InlineKeyboardMarkup keyboard;
@@ -82,7 +82,7 @@ public class LetterClickCallback implements CallbackDataHandler {
             keyboard = new InlineKeyboardMarkup(new BackStartButton(userId));
             matches.deleteMatch(inlineMessageId);
             if (match.getLives() == 0) {
-                message.append(getParametirizedString("message_reveal_word", userId, callbackQuery.getSender(), match));
+                message.append(getParametirizedString("message_reveal_word", userId, callbackQuery.getSender().getFirstName(), match));
             } else {
                 message.append(getString("message_match_won", userId));
             }

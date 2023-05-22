@@ -27,7 +27,7 @@ public class BackStartCallback implements CallbackDataHandler {
         String inlineMessageId = callbackQuery.getInlineMessageId().get();
 
         EditMessageText editMessageText = new EditMessageText()
-                .text(Text.parseHtml(getParametirizedString("message_start", userId, callbackQuery.getSender())))
+                .text(Text.parseHtml(getParametirizedString("message_start", userId, callbackQuery.getSender().getFirstName())))
                 .inlineMessage(inlineMessageId)
                 .replyMarkup(StartKeyboard.generate(userId));
         bot.execute(editMessageText);

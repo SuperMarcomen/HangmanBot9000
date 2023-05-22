@@ -41,7 +41,7 @@ public class InlineResults implements InlineQueryHandler {
         InlineQueryResult inlineResult = new InlineQueryResultArticle(
                 "start",
                 getString("inline_start_title", userId),
-                new InputTextMessageContent(Text.parseHtml(getParametirizedString("message_start", userId, user)), false),
+                new InputTextMessageContent(Text.parseHtml(getParametirizedString("message_start", userId, user.getFirstName())), false),
                 StartKeyboard.generate(userId),
                 getString("inline_start_description", userId)
         );
