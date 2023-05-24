@@ -2,6 +2,8 @@ package it.marcodemartino.hangmanbot.game.stats.entities;
 
 public class UserStats {
 
+    private static final int RIGHT_POINTS = 1;
+    private static final float WRONG_POINTS = -0.5f;
     private final long userId;
     private int startedMatches;
     private int rightLetters;
@@ -17,6 +19,11 @@ public class UserStats {
     public float getRatio() {
         if (rightLetters + wrongLetters == 0) return 0;
         return (float) rightLetters / ((float) rightLetters + (float) wrongLetters);
+    }
+
+    public double getPoints() {
+        float points = rightLetters * RIGHT_POINTS + wrongLetters * WRONG_POINTS;
+        return Math.floor(points);
     }
 
     public long getUserId() {

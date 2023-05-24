@@ -20,6 +20,7 @@ public class TelegramLanguages {
     private static final String RIGHT_LETTERS = "%right_letters";
     private static final String WRONG_LETTERS = "%wrong_letters";
     private static final String RATIO = "%ratio";
+    private static final String POINTS = "%points";
 
     public static String getParameterizedStringStats(String key, long userId, UserInfo userInfo) {
         String message = getString(key, userId);
@@ -27,7 +28,8 @@ public class TelegramLanguages {
         message = message
                 .replace(RIGHT_LETTERS, String.valueOf(userInfo.getStats().getRightLetters()))
                 .replace(WRONG_LETTERS, String.valueOf(userInfo.getStats().getWrongLetters()))
-                .replace(RATIO, String.format("%.2f", userInfo.getStats().getRatio()));
+                .replace(RATIO, String.format("%.2f", userInfo.getStats().getRatio()))
+                .replace(POINTS, String.format("%.0f", userInfo.getStats().getPoints()));
         return message;
     }
 

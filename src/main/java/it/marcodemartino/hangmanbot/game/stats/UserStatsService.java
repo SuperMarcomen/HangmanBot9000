@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
+import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
 
 public class UserStatsService {
@@ -41,11 +42,23 @@ public class UserStatsService {
         userDataDAO.initializeCache(userData);
     }
 
-    public List<UserInfo> getTopPlayers(int limit) {
+    public UserInfo getUserInfoOf(long userId) {
+        return new UserInfo(userStatsDAO.getOrCreate(userId), userDataDAO.getOrCreate(userId));
+    }
+
+    public List<UserInfo> getTopPlayersRatio(int limit) {
+        return getTopPlayers(limit, UserStats::getRatio);
+    }
+
+    public List<UserInfo> getTopPlayersPoints(int limit) {
+        return getTopPlayers(limit, UserStats::getPoints);
+    }
+
+    private List<UserInfo> getTopPlayers(int limit, ToDoubleFunction<UserStats> keyExtractor) {
         List<UserStats> userStatsList = getUserStats();
         if (userStatsList.isEmpty()) return Collections.emptyList();
 
-        Stream<UserStats> sortedStatsList = sortStats(userStatsList, limit);
+        Stream<UserStats> sortedStatsList = sortStats(userStatsList, limit, keyExtractor);
         List<UserInfo> userInfolist = new ArrayList<>();
 
         sortedStatsList.forEach(userStats -> {
@@ -68,9 +81,10 @@ public class UserStatsService {
         return userStats;
     }
 
-    private Stream<UserStats> sortStats(List<UserStats> userStats, int limit) {
+    private Stream<UserStats> sortStats(List<UserStats> userStats, int limit, ToDoubleFunction<UserStats> keyExtractor) {
         return userStats.stream()
-                .sorted(Comparator.comparingDouble(UserStats::getRatio).reversed())
+                .filter(stats -> stats.getStartedMatches() > 20)
+                .sorted(Comparator.comparingDouble(keyExtractor).reversed())
                 .limit(limit);
     }
 

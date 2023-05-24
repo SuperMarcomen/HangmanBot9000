@@ -1,4 +1,4 @@
-package it.marcodemartino.hangmanbot.telegram.callback;
+package it.marcodemartino.hangmanbot.telegram.callback.stats;
 
 import io.github.ageofwar.telejam.Bot;
 import io.github.ageofwar.telejam.callbacks.CallbackDataHandler;
@@ -10,16 +10,20 @@ import io.github.ageofwar.telejam.text.Text;
 import it.marcodemartino.hangmanbot.game.stats.UserStatsService;
 import it.marcodemartino.hangmanbot.game.stats.entities.UserInfo;
 import it.marcodemartino.hangmanbot.telegram.buttons.back.BackStartButton;
+import it.marcodemartino.hangmanbot.telegram.buttons.stats.PointsButton;
+import it.marcodemartino.hangmanbot.telegram.buttons.stats.RatioButton;
+
+import java.util.List;
 
 import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getParameterizedStringStats;
 import static it.marcodemartino.hangmanbot.language.TelegramLanguages.getString;
 
-public class StatsCallback implements CallbackDataHandler {
+public class RatioStatsCallback implements CallbackDataHandler {
 
     private final Bot bot;
     private final UserStatsService userStatsService;
 
-    public StatsCallback(Bot bot, UserStatsService userStatsService) {
+    public RatioStatsCallback(Bot bot, UserStatsService userStatsService) {
         this.bot = bot;
         this.userStatsService = userStatsService;
     }
@@ -28,7 +32,8 @@ public class StatsCallback implements CallbackDataHandler {
     public void onCallbackData(CallbackQuery callbackQuery, String name, String args) throws Throwable {
         if (callbackQuery.getData().isEmpty()) return;
         if (callbackQuery.getInlineMessageId().isEmpty()) return;
-        if (!callbackQuery.getData().get().equals("stats")) return;
+        String callbackData = callbackQuery.getData().get();
+        if (!callbackData.equals("stats_ratio")) return;
 
         long userId = callbackQuery.getSender().getId();
         String inlineMessageId = callbackQuery.getInlineMessageId().get();
@@ -42,8 +47,14 @@ public class StatsCallback implements CallbackDataHandler {
     }
 
     private InlineKeyboardMarkup generateKeyboard(long userId) {
-        return new InlineKeyboardMarkup(new InlineKeyboardButton[] {
-                new BackStartButton(userId)
+        return new InlineKeyboardMarkup(new InlineKeyboardButton[][] {
+                {
+                        new PointsButton(false, userId),
+                        new RatioButton(true, userId)
+                },
+                {
+                        new BackStartButton(userId)
+                }
         });
     }
 
@@ -51,9 +62,23 @@ public class StatsCallback implements CallbackDataHandler {
         StringBuilder message = new StringBuilder();
         message.append(getString("message_stats_title", userId));
 
-        for (UserInfo topPlayer : userStatsService.getTopPlayers(limit)) {
-            message.append(getParameterizedStringStats("message_stats_line", userId, topPlayer));
+        List<UserInfo> stats = userStatsService.getTopPlayersRatio(limit);
+        if (!statsContainsUser(userId, stats)) {
+            message.append(getParameterizedStringStats("message_stats_your_ratio", userId, userStatsService.getUserInfoOf(userId)));
+            message.append(System.lineSeparator());
+        }
+
+        for (UserInfo topPlayer : stats) {
+            message.append(getParameterizedStringStats("message_stats_ratio_line", userId, topPlayer));
+            message.append(System.lineSeparator());
         }
         return message.toString();
+    }
+
+    private boolean statsContainsUser(long userId, List<UserInfo> stats) {
+        for (UserInfo stat : stats) {
+            if (stat.getStats().getUserId() == userId) return true;
+        }
+        return false;
     }
 }
