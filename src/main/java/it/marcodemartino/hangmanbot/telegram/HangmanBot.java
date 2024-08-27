@@ -17,6 +17,7 @@ import it.marcodemartino.hangmanbot.telegram.callback.settings.ChooseLanguageCal
 import it.marcodemartino.hangmanbot.telegram.callback.settings.LanguageChosenCallback;
 import it.marcodemartino.hangmanbot.telegram.callback.settings.SettingsCallback;
 import it.marcodemartino.hangmanbot.telegram.callback.stats.RatioStatsCallback;
+import it.marcodemartino.hangmanbot.telegram.commands.StartCommand;
 import it.marcodemartino.hangmanbot.telegram.inline.InlineResults;
 
 import java.io.IOException;
@@ -43,6 +44,8 @@ public class HangmanBot extends LongPollingBot {
             password = args[1];
         }
         Database.initializeConnection(password);
+
+        events.registerCommand(new StartCommand(bot), "start", "start" + bot.getUsername());
 
         WordsProvider wordsProvider = new WordsProviderTxt();
         Matches matches = new Matches();

@@ -37,7 +37,7 @@ public class WordsProviderTxt extends WordsProvider {
             if (!pathString.contains(ALPHABET_FOLDER) && !pathString.contains(WORD_FOLDER)) continue;
             String[] arguments = pathString.split(escapeSeparator(DIR_SEPARATOR));
             boolean alphabet = arguments[0].equals(ALPHABET_FOLDER);
-            Locale locale = Locale.forLanguageTag(arguments[1]);
+            Locale locale = Locale.forLanguageTag(arguments[1].split("\\.")[0]);
             String category = "";
 
             if (!alphabet) {
@@ -85,7 +85,10 @@ public class WordsProviderTxt extends WordsProvider {
     private List<Path> getAllTxtFiles() {
         try (Stream<Path> paths = Files.walk(Paths.get(""))) {
             return paths
-                    .filter(file -> !Files.isDirectory(file))
+                    .filter(file -> {
+                        System.out.println(file.getFileName().toString());
+                        return !Files.isDirectory(file);
+                    })
                     .collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
