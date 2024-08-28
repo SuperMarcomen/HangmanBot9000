@@ -1,5 +1,6 @@
 package it.marcodemartino.hangmanbot;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
@@ -23,7 +24,7 @@ public class HangmanBot implements SpringLongPollingBot, LongPollingSingleThread
 
   @Override
   public String getBotToken() {
-    return "1067685030:AAFqEqR_5pV-RrSCmKz4JRXxmSghKKWFWWA";
+    return Dotenv.load().get("BOT_TOKEN");
   }
 
   @Override
