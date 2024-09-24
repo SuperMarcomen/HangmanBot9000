@@ -1,6 +1,13 @@
 package it.marcodemartino.hangmanbot;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import it.marcodemartino.hangmanbot.entities.RunningGame;
+import it.marcodemartino.hangmanbot.entities.UserIdentity;
+import it.marcodemartino.hangmanbot.entities.UserLanguage;
+import it.marcodemartino.hangmanbot.repositories.RunningGameRepository;
+import it.marcodemartino.hangmanbot.repositories.UserIdentityRepository;
+import java.util.Locale;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
@@ -17,9 +24,34 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 @Component
 public class HangmanBot implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
   private final TelegramClient telegramClient;
+  private final UserIdentityRepository userIdentityRepository;
+  private final RunningGameRepository runningGameRepository;
 
-  public HangmanBot() {
+  @Autowired
+  public HangmanBot(UserIdentityRepository userIdentityRepository, RunningGameRepository runningGameRepository) {
+    this.userIdentityRepository = userIdentityRepository;
+    this.runningGameRepository = runningGameRepository;
     telegramClient = new OkHttpTelegramClient(getBotToken());
+
+    UserIdentity userIdentity = new UserIdentity()
+        .userId(123L)
+        .firstName("123");
+    UserLanguage userLanguage = new UserLanguage()
+        .language(Locale.ENGLISH)
+        .user(userIdentity);
+    userIdentityRepository.save(userIdentity);
+
+    System.out.println(123);
+    RunningGame runningGame = new RunningGame()
+        .messageId(123)
+        .chatId(456)
+        .category("test")
+        .lives(5)
+        .guessedLetters(new char[] {'a'})
+        .locale(Locale.ITALIAN)
+        .word("ciao");
+    runningGameRepository.save(runningGame);
+    System.out.println(456);
   }
 
   @Override
