@@ -18,6 +18,9 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public class HangmanBot implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
   private final TelegramClient telegramClient;
 
+  /**
+   * Initializes the hangman bot and everything needed for it.
+   */
   public HangmanBot() {
     telegramClient = new OkHttpTelegramClient(getBotToken());
   }
