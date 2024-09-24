@@ -8,12 +8,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+/**
+ * The composite primary key of the running game, consisting of
+ * chat id and message id, which uniquely identify a match.
+ */
 @Accessors(fluent = true)
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RunningGameId implements Serializable {
+public class RunningMatchId implements Serializable {
 
   @NotNull
   private long chatId;

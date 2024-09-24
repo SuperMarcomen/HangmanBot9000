@@ -11,6 +11,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+/**
+ * Stores the preferred language of the user for internationalization purposes.
+ */
 @Entity
 @Accessors(fluent = true)
 @Getter

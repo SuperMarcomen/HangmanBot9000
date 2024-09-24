@@ -12,6 +12,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+/**
+ * Represents basic identifying data for the users used to show their
+ * names on the leaderboard.
+ */
 @Entity
 @Accessors(fluent = true)
 @Getter

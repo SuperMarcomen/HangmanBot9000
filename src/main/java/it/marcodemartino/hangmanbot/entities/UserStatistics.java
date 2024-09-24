@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+/**
+ * Stores user statistics to show them on the leaderboard.
+ */
 @Entity
 @Accessors(fluent = true)
 @Getter
@@ -23,13 +26,16 @@ public class UserStatistics {
   private int startedMatches;
 
   @PositiveOrZero
+  private int perfectMatches;
+
+  @PositiveOrZero
   private int rightLetters;
 
   @PositiveOrZero
   private int wrongLetters;
 
   @OneToOne
+  @JoinColumn(unique = true)
   @MapsId
-  @JoinColumn(name = "userId")
   private UserIdentity user;
 }

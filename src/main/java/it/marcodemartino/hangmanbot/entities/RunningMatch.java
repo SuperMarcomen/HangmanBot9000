@@ -10,14 +10,16 @@ import jakarta.validation.constraints.Positive;
 import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
+/**
+ * Represents the instance of a running match to be stored in the db
+ * to recover it in case of crash.
+ */
 @Entity
-@IdClass(RunningGameId.class)
-@Accessors(fluent = true)
+@IdClass(RunningMatchId.class)
 @Getter
 @Setter
-public class RunningGame {
+public class RunningMatch {
 
   @Id
   private long chatId;
