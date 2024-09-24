@@ -16,10 +16,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Run check style
-        uses: nikitasavinov/checkstyle-action@master
+      - name: Run checkstyle
+        uses: dbelyaev/action-checkstyle@v1.16.2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: 'github-pr-check'
+          github_token: ${{ secrets.github_token }}
+          reporter: github-check
+          workdir: ./
+          checkstyle_config: ./checkstyle.xml
           level: error
-          checkstyle_config: './checkstyle.xml'
+          filter_mode: nofilter
