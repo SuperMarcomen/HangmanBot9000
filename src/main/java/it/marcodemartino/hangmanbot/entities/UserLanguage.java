@@ -31,4 +31,5 @@ public class UserLanguage {
   @JoinColumn(name = "userId")
   @NotNull
   private UserIdentity user;
+
 }

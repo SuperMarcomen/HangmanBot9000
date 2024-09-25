@@ -21,6 +21,7 @@ public class RunningMatchId implements Serializable {
 
   @NotNull
   private long chatId;
+
   @NotNull
   private long messageId;
 

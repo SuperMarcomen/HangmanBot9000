@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,9 @@ public class UserStatistics {
   private int startedMatches;
 
   @PositiveOrZero
+  private int wonMatches;
+
+  @PositiveOrZero
   private int perfectMatches;
 
   @PositiveOrZero
@@ -35,7 +39,9 @@ public class UserStatistics {
   private int wrongLetters;
 
   @OneToOne
-  @JoinColumn(unique = true)
   @MapsId
+  @JoinColumn(name = "userId")
+  @NotNull
   private UserIdentity user;
+
 }

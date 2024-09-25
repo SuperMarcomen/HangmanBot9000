@@ -37,4 +37,5 @@ public class UserIdentity {
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
   @NotNull
   private UserLanguage language;
+
 }
