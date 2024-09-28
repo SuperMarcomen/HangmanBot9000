@@ -49,4 +49,45 @@ public class RunningMatch {
   @NotNull
   private UserIdentity owner;
 
+  /**
+   * Adds a letter to the guessed one by expanding the array.
+   *
+   * @param letter the letter to be added
+   */
+  public void addGuessedLetter(char letter) {
+    char[] newLetters = new char[guessedLetters.length + 1];
+    System.arraycopy(guessedLetters, 0, newLetters, 0, guessedLetters.length);
+    newLetters[newLetters.length - 1] = letter;
+    guessedLetters = newLetters;
+  }
+
+  /**
+   * Checks whether the match is won by checking if all letters of the word have been guessed.
+   *
+   * @return whether the match is won
+   */
+  public boolean isMatchWon() {
+    for (char letter : word.toCharArray()) {
+      if (!isLetterGuessed(letter)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Checks whether a letter is already guessed.
+   *
+   * @param letter the letter to be checked
+   * @return whether the letter is already guessed
+   */
+  public boolean isLetterGuessed(char letter) {
+    for (char guessedLetter : guessedLetters) {
+      if (letter == guessedLetter) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 }
