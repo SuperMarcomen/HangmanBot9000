@@ -10,6 +10,8 @@ import jakarta.validation.constraints.Positive;
 import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
+
 
 /**
  * Represents the instance of a running match to be stored in the db
@@ -17,6 +19,7 @@ import lombok.Setter;
  */
 @Entity
 @IdClass(RunningMatchId.class)
+@Accessors(fluent = true)
 @Getter
 @Setter
 public class RunningMatch {
