@@ -1,6 +1,7 @@
 package it.marcodemartino.hangmanbot.services;
 
 import it.marcodemartino.hangmanbot.repositories.FileRepository;
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,6 +36,7 @@ public class WordsService {
     random = new Random();
   }
 
+  @PostConstruct
   public void loadWords() {
     Path parent = Path.of(WORDS_FOLDER);
     try (Stream<Path> elementsInDir = Files.list(parent)) {
