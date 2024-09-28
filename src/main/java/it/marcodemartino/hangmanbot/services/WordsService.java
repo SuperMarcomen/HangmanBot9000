@@ -18,6 +18,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Offers the capability to load words from files and pick random words
+ * from different categories.
+ */
 @Service
 public class WordsService {
 
@@ -28,6 +32,11 @@ public class WordsService {
   private final Random random;
   private final Logger logger = LogManager.getLogger(WordsService.class);
 
+  /**
+   * Initializes the needed constants.
+   *
+   * @param fileRepository the repository to read files
+   */
   @Autowired
   public WordsService(FileRepository fileRepository) {
     this.fileRepository = fileRepository;
@@ -36,6 +45,9 @@ public class WordsService {
     random = new Random();
   }
 
+  /**
+   * Loads the words from disk and puts them in the maps by their categories.
+   */
   @PostConstruct
   public void loadWords() {
     Path parent = Path.of(WORDS_FOLDER);
@@ -55,12 +67,21 @@ public class WordsService {
     }
   }
 
+  /**
+   * Deletes the already loaded words and loads them again.
+   */
   public void reloadWords() {
     localeToCategoriesToWords.clear();
     sharedCategoriesToWords.clear();
     loadWords();
   }
 
+  /**
+   * Gets a random word from this category.
+   *
+   * @param category the category from which the random word will come from
+   * @return the random word
+   */
   public String getWordFrom(String category) {
     return getRandomWord(
         sharedCategoriesToWords
@@ -68,6 +89,13 @@ public class WordsService {
     );
   }
 
+  /**
+   * Gets a random word from the category of this language.
+   *
+   * @param locale   the language from which the category comes from
+   * @param category the category from which the random word will come from
+   * @return the random word
+   */
   public String getWordFrom(Locale locale, String category) {
     return getRandomWord(
         localeToCategoriesToWords
