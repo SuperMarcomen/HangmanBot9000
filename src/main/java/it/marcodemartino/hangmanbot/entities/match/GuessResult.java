@@ -1,4 +1,4 @@
-package it.marcodemartino.hangmanbot.entities;
+package it.marcodemartino.hangmanbot.entities.match;
 
 /**
  * States what the result of a letter guess is.

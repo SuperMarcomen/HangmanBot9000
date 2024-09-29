@@ -1,12 +1,17 @@
-package it.marcodemartino.hangmanbot.entities;
+package it.marcodemartino.hangmanbot.entities.match;
 
+import it.marcodemartino.hangmanbot.entities.UserIdentity;
+import it.marcodemartino.hangmanbot.entities.stats.UserMatchContribution;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import java.util.List;
 import java.util.Locale;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,6 +49,9 @@ public class RunningMatch {
 
   @NotNull
   private Locale locale;
+
+  @OneToMany(mappedBy = "runningMatch", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<UserMatchContribution> contributions;
 
   @ManyToOne
   @NotNull
@@ -108,5 +116,4 @@ public class RunningMatch {
     }
     return false;
   }
-
 }

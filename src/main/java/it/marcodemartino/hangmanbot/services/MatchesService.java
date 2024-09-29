@@ -1,9 +1,9 @@
 package it.marcodemartino.hangmanbot.services;
 
-import it.marcodemartino.hangmanbot.entities.GuessResult;
-import it.marcodemartino.hangmanbot.entities.RunningMatch;
-import it.marcodemartino.hangmanbot.entities.RunningMatchId;
 import it.marcodemartino.hangmanbot.entities.UserIdentity;
+import it.marcodemartino.hangmanbot.entities.match.GuessResult;
+import it.marcodemartino.hangmanbot.entities.match.RunningMatch;
+import it.marcodemartino.hangmanbot.entities.match.RunningMatchId;
 import it.marcodemartino.hangmanbot.repositories.RunningMatchRepository;
 import jakarta.annotation.PostConstruct;
 import java.text.Collator;
