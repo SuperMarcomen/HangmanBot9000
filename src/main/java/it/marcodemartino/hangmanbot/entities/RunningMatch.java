@@ -50,6 +50,25 @@ public class RunningMatch {
   private UserIdentity owner;
 
   /**
+   * Computes the current state of the word based on the
+   * guessed letters.
+   *
+   * @return the current state of the word
+   */
+  public String getWordState() {
+    char[] wordLetters = new char[word.length()];
+    char[] wordArray = word.toCharArray();
+    for (int i = 0; i < wordArray.length; i++) {
+      if (isLetterGuessed(wordArray[i])) {
+        wordLetters[i] = wordArray[i];
+      } else {
+        wordLetters[i] = '-';
+      }
+    }
+    return new String(wordLetters);
+  }
+
+  /**
    * Adds a letter to the guessed one by expanding the array.
    *
    * @param letter the letter to be added

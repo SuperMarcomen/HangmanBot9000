@@ -52,6 +52,72 @@ public class MatchesService {
     }
   }
 
+  /*
+   * I decided against passing the model class to the view-side of the application,
+   * because it contains some data manipulation methods that I would prefer be
+   * hidden from that side (like {@link #RunningMatch.addGuessedLetter(char letter) addGuessedLetter}).
+   * Therefore, here come some wrapper methods to expose only the needed data.
+   */
+
+  /**
+   * Returns all the guessed letters of the match corresponding
+   * to the given id.
+   *
+   * @param matchId the id of the match
+   * @return all the guessed letters of the match
+   */
+  public char[] getGuessedLetterOfMatch(RunningMatchId matchId) {
+    RunningMatch match = runningMatches.get(matchId);
+    return match.guessedLetters();
+  }
+
+  /**
+   * Returns the category of the match corresponding
+   * to the given id.
+   *
+   * @param matchId the id of the match
+   * @return the category of the match
+   */
+  public String getCategoryOfMatch(RunningMatchId matchId) {
+    RunningMatch match = runningMatches.get(matchId);
+    return match.category();
+  }
+
+  /**
+   * Returns the word to guess of the match corresponding
+   * to the given id.
+   *
+   * @param matchId the id of the match
+   * @return the word to guess of the match
+   */
+  public String getWordOfMatch(RunningMatchId matchId) {
+    RunningMatch match = runningMatches.get(matchId);
+    return match.word();
+  }
+
+  /**
+   * Returns the amount of lives left for the match corresponding
+   * to the given id.
+   *
+   * @param matchId the id of the match
+   * @return the amount of lives of the match
+   */
+  public int getLivesOfMatch(RunningMatchId matchId) {
+    RunningMatch match = runningMatches.get(matchId);
+    return match.lives();
+  }
+
+  /**
+   * Forwards the call to the method in RunningMatch.
+   *
+   * @param matchId the id of the match
+   * @return the current state of the word
+   */
+  public String getWordStateOfMatch(RunningMatchId matchId) {
+    RunningMatch match = runningMatches.get(matchId);
+    return match.getWordState();
+  }
+
   /**
    * Creates a new match taking a random word and storing it into the db.
    *
@@ -107,6 +173,8 @@ public class MatchesService {
       return GuessResult.LETTER_ALREADY_GUESSED;
     }
 
+    match.addGuessedLetter(letter);
+
     if (!stringContainsLetter(match.word(), letter)) {
       match.lives(match.lives() - 1);
       if (match.lives() == 0) {
@@ -115,7 +183,6 @@ public class MatchesService {
       return GuessResult.LETTER_WRONG;
     }
 
-    match.addGuessedLetter(letter);
     if (match.isMatchWon()) {
       return GuessResult.MATCH_WON;
     }
