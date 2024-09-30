@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class MatchesService {
 
   private final WordsService wordsService;
+  private final StatsService statsService;
   private final Map<RunningMatchId, RunningMatch> runningMatches;
   private final RunningMatchRepository runningMatchRepository;
   private final Collator collator = Collator.getInstance();
@@ -29,11 +30,14 @@ public class MatchesService {
    * Initializes all the needed instances.
    *
    * @param wordsService           the service to get random words
+   * @param statsService           the service to update the stats
    * @param runningMatchRepository the repository to store running matches
    */
   @Autowired
-  public MatchesService(WordsService wordsService, RunningMatchRepository runningMatchRepository) {
+  public MatchesService(WordsService wordsService, StatsService statsService,
+                        RunningMatchRepository runningMatchRepository) {
     this.wordsService = wordsService;
+    this.statsService = statsService;
     this.runningMatchRepository = runningMatchRepository;
     runningMatches = new HashMap<>();
     collator.setStrength(Collator.PRIMARY);
@@ -148,13 +152,15 @@ public class MatchesService {
   /**
    * Checks whether the guesses letter is correct and whether the match is won.
    *
-   * @param letter  the letter that was guessed
-   * @param matchId the id of the match
+   * @param letter       the letter that was guessed
+   * @param userIdentity the identity of the user
+   * @param matchId      the id of the match
    * @return the result of the guess
    */
-  public GuessResult guessResult(Character letter, RunningMatchId matchId) {
+  public GuessResult guessResult(Character letter, UserIdentity userIdentity, RunningMatchId matchId) {
     RunningMatch match = runningMatches.get(matchId);
     GuessResult guessResult = guessLetter(letter, match);
+    match = statsService.updateStats(guessResult, match, userIdentity);
     switch (guessResult) {
       case MATCH_WON, MATCH_LOST -> {
         runningMatches.remove(matchId);
@@ -164,6 +170,8 @@ public class MatchesService {
       default -> {
       }
     }
+
+    runningMatchRepository.save(match);
 
     return guessResult;
   }

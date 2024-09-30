@@ -116,4 +116,15 @@ public class RunningMatch {
     }
     return false;
   }
+
+  public UserMatchContribution contributionOf(long userId) {
+    for (UserMatchContribution contribution : contributions) {
+      if (contribution.userId() == userId) {
+        return contribution;
+      }
+    }
+    UserMatchContribution contribution = new UserMatchContribution(userId, chatId, messageId);
+    contributions.add(contribution);
+    return contribution;
+  }
 }
