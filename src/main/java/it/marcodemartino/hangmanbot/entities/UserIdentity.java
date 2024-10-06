@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,7 +34,6 @@ public class UserIdentity {
   private String lastName;
 
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-  @NotNull
   private UserLanguage language;
 
 }

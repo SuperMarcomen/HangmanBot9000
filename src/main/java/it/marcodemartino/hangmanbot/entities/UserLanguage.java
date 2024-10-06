@@ -3,7 +3,6 @@ package it.marcodemartino.hangmanbot.entities;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import java.util.Locale;
@@ -27,9 +26,7 @@ public class UserLanguage {
   private Locale language;
 
   @OneToOne
-  @MapsId
   @JoinColumn(name = "userId")
-  @NotNull
   private UserIdentity user;
 
 }

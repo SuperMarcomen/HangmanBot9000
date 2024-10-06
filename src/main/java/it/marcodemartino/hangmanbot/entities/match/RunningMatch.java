@@ -11,6 +11,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import lombok.Getter;
@@ -56,6 +57,11 @@ public class RunningMatch {
   @ManyToOne
   @NotNull
   private UserIdentity owner;
+
+  public RunningMatch() {
+    contributions = new ArrayList<>();
+    guessedLetters = new char[0];
+  }
 
   /**
    * Computes the current state of the word based on the

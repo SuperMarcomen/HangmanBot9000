@@ -145,8 +145,10 @@ public class MatchesService {
         .owner(userIdentity)
         .locale(locale)
         .category(category);
+
     runningMatches.put(matchId, runningMatch);
     runningMatchRepository.save(runningMatch);
+    statsService.increaseStartedMatches(userIdentity);
   }
 
   /**

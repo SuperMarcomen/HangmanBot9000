@@ -4,7 +4,6 @@ import it.marcodemartino.hangmanbot.entities.UserIdentity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -42,7 +41,6 @@ public class UserStatistics {
   private int wrongLetters;
 
   @OneToOne
-  @MapsId
   @JoinColumn(name = "userId")
   @NotNull
   private UserIdentity user;
