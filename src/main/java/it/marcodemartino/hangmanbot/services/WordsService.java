@@ -138,6 +138,9 @@ public class WordsService {
   }
 
   private String getRandomWord(List<String> words) {
-    return words.get(random.nextInt(words.size()));
+    int randomIndex = words.size() > 1
+        ? random.nextInt(words.size())
+        : 0;
+    return words.get(randomIndex);
   }
 }

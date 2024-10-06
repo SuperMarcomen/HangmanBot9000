@@ -1,6 +1,8 @@
 package it.marcodemartino.hangmanbot;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import it.marcodemartino.hangmanbot.repositories.UserStatisticsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
@@ -17,11 +19,14 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 @Component
 public class HangmanBot implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
   private final TelegramClient telegramClient;
+  private final UserStatisticsRepository userStatisticsRepository;
 
   /**
    * Initializes the hangman bot and everything needed for it.
    */
-  public HangmanBot() {
+  @Autowired
+  public HangmanBot(UserStatisticsRepository userStatisticsRepository) {
+    this.userStatisticsRepository = userStatisticsRepository;
     telegramClient = new OkHttpTelegramClient(getBotToken());
   }
 

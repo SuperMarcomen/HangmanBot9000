@@ -1,6 +1,6 @@
 package it.marcodemartino.hangmanbot.repositories;
 
-import it.marcodemartino.hangmanbot.entities.UserStatistics;
+import it.marcodemartino.hangmanbot.entities.stats.UserStatistics;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
